@@ -34,11 +34,6 @@ public class CMain {
 				 if(CEjecucionPresupuestaria.loadEjecucionPresupuestaria(conn, null))
 					 CLogger.writeConsole("Cara ejecucion presupuestara con exito");
 			 }
-			 if(!cline.hasOption("help")){
-				 DateTime now = new DateTime();
-				 CLogger.writeConsole("Tiempo total: " + Minutes.minutesBetween(start, now).getMinutes() + " minutos " + (Seconds.secondsBetween(start, now).getSeconds() % 60) + " segundos " +
-				 (now.getMillis()%10) + " milisegundos ");
-			 }
 			 if(cline.hasOption("entidades_ues")){
 				 CLogger.writeConsole("Inicio carga de catalogo de entidades y unidades_ejecutoras...");
 				 Integer ejercicio = cline.getOptionValue("egch")!=null && cline.getOptionValue("eue").length()>0 ? 
@@ -54,6 +49,11 @@ public class CMain {
 					 CLogger.writeConsole("Cara de sigade con exito");
 				 COracleDB.close();
 			 }
+		 }
+		 if(!cline.hasOption("help")){
+			 DateTime now = new DateTime();
+			 CLogger.writeConsole("Tiempo total: " + Minutes.minutesBetween(start, now).getMinutes() + " minutos " + (Seconds.secondsBetween(start, now).getSeconds() % 60) + " segundos " +
+			 (now.getMillis()%10) + " milisegundos ");
 		 }
 	 }			 
 }
