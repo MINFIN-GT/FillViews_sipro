@@ -43,7 +43,7 @@ public class CMain {
 				 CLogger.writeConsole("Inicio carga de catalogo de entidades y unidades_ejecutoras...");
 				 Integer ejercicio = cline.getOptionValue("egch")!=null && cline.getOptionValue("eue").length()>0 ? 
 						 Integer.parseInt(cline.getOptionValue("eue")) : start.getYear();
-				 CEntidad.loadEjecucionPresupuestaria(conn, ejercicio);
+				 CEntidad.loadEntidad(conn, ejercicio);
 			 }
 			 CHive.close(conn);
 		 }

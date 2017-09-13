@@ -8,7 +8,7 @@ import utilities.CLogger;
 
 public class CEntidad {
 	
-public static boolean loadEjecucionPresupuestaria(Connection conn,Integer ejercicio){
+public static boolean loadEntidad(Connection conn,Integer ejercicio){
 		
 		boolean ret = false;
 		try{
@@ -28,14 +28,8 @@ public static boolean loadEjecucionPresupuestaria(Connection conn,Integer ejerci
 					int rows_total=0;
 					
 					
-										
-									
-				
-				
-				
-				
-				
-				
+			   pstm1 = CMariaDB.getConnection().prepareStatement("SET FOREIGN_KEY_CHECKS = 0;");
+			   pstm1.executeUpdate();
 				
 				
 				CLogger.writeConsole("entidades");
@@ -172,7 +166,12 @@ public static boolean loadEjecucionPresupuestaria(Connection conn,Integer ejerci
 				pstm1 = CMariaDB.getConnection().prepareStatement(query);
 				pstm1.executeUpdate();
 				
+				pstm1 = CMariaDB.getConnection().prepareStatement("SET FOREIGN_KEY_CHECKS = 1;");
+				pstm1.executeUpdate();
+				
 				pstm1.close();
+				
+				
 				CLogger.writeConsole("Records escritos Totales: "+rows_total);
 					
 				}
