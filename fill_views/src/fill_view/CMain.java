@@ -29,9 +29,11 @@ public class CMain {
 		 CommandLine cline = parser.parse( options, args );
 		 if (CHive.connect()){
 			 Connection conn = CHive.getConnection();
+			 if(cline.hasOption("ej_pre")){
 				 CLogger.writeConsole("Inicio carga ejecución presupuestaria...");
 				 if(CEjecucionPresupuestaria.loadEjecucionPresupuestaria(conn, null))
-					 CLogger.writeConsole("Cara ejecucion presupuestara con exito"); 
+					 CLogger.writeConsole("Cara ejecucion presupuestara con exito");
+			 }
 			 
 			
 			 
@@ -43,12 +45,14 @@ public class CMain {
 			 CHive.close(conn);
 		 }
 		 
+		 if(cline.hasOption("sigade")){
 			 if(COracleDB.connect()){		 Connection conn = COracleDB.getConnection();
 				 CLogger.writeConsole("Inicio carga sigade...");
 				 if(CSigade.loadDataSigade(conn))
 					 CLogger.writeConsole("Cara de sigade con exito");
 				 COracleDB.close();
 			 }
+		 }
 			 
 		 
 		
