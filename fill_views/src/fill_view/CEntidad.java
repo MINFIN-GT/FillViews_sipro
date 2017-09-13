@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 
 import utilities.CLogger;
 
-public class CEntidades {
+public class CEntidad {
 	
 public static boolean loadEjecucionPresupuestaria(Connection conn,Integer ejercicio){
 		

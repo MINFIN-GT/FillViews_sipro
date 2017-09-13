@@ -17,9 +17,9 @@ public class CMain {
 	
 	static{
 		options = new Options();
-		options.addOption("ej_pre", "ej_pre", false, "Ejecucion presupuestara");
-		options.addOption("sigade", "sigade", false, "sigade");
-		
+		options.addOption("ep", "ej_pre", false, "Ejecucion presupuestara");
+		options.addOption("sg", "sigade", false, "Conexión a Sigade");
+		options.addOption("eue", "entidades_ues", true, "Catalogo de entidades y ues");
 	}
 	
 	final static  CommandLineParser parser = new DefaultParser();
@@ -34,17 +34,19 @@ public class CMain {
 				 if(CEjecucionPresupuestaria.loadEjecucionPresupuestaria(conn, null))
 					 CLogger.writeConsole("Cara ejecucion presupuestara con exito");
 			 }
-			 
-			
-			 
 			 if(!cline.hasOption("help")){
 				 DateTime now = new DateTime();
 				 CLogger.writeConsole("Tiempo total: " + Minutes.minutesBetween(start, now).getMinutes() + " minutos " + (Seconds.secondsBetween(start, now).getSeconds() % 60) + " segundos " +
 				 (now.getMillis()%10) + " milisegundos ");
 			 }
+			 if(cline.hasOption("entidades_ues")){
+				 CLogger.writeConsole("Inicio carga de catalogo de entidades y unidades_ejecutoras...");
+				 Integer ejercicio = cline.getOptionValue("egch")!=null && cline.getOptionValue("eue").length()>0 ? 
+						 Integer.parseInt(cline.getOptionValue("eue")) : start.getYear();
+				 CEntidad.loadEjecucionPresupuestaria(conn, ejercicio);
+			 }
 			 CHive.close(conn);
 		 }
-		 
 		 if(cline.hasOption("sigade")){
 			 if(COracleDB.connect()){		 Connection conn = COracleDB.getConnection();
 				 CLogger.writeConsole("Inicio carga sigade...");
@@ -53,8 +55,5 @@ public class CMain {
 				 COracleDB.close();
 			 }
 		 }
-			 
-		 
-		
 	 }			 
 }
