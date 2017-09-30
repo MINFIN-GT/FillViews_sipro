@@ -16,17 +16,17 @@ public class CSigade {
 				PreparedStatement pstm;
 				
 				
-				boolean bconn =  CMariaDB.connect();
+				boolean bconn =  CMariaDB.connect_analytic();
 				CLogger.writeConsole("Cargando datos a mariaDB");
 				if(bconn){
 					ret = true;
 					int rows = 0;
-					PreparedStatement pstm1 = CMariaDB.getConnection().prepareStatement("TRUNCATE TABLE sipro.dtm_avance_fisfinan_det_dti");
+					PreparedStatement pstm1 = CMariaDB.getConnection_analytic().prepareStatement("TRUNCATE TABLE sipro_analytic.dtm_avance_fisfinan_det_dti");
 					pstm1.executeUpdate();
 					int rows_total=0;
 					CLogger.writeConsole("Cargando datos a dtm_avance_fisfinan_det_dti");
 					
-					pstm1 = CMariaDB.getConnection().prepareStatement("Insert INTO sipro.dtm_avance_fisfinan_det_dti "
+					pstm1 = CMariaDB.getConnection_analytic().prepareStatement("Insert INTO sipro_analytic.dtm_avance_fisfinan_det_dti "
 							+ "values (?,?,?,?,?,?,?,?,?,?,?) ");
 					
 					pstm = conn.prepareStatement("select * from DTM_AVANCE_FISFINAN_DET_DTI");
@@ -65,10 +65,10 @@ public class CSigade {
 					CLogger.writeConsole("Cargando datos a dtm_avance_fisfinan_dti");
 					
 					
-					 pstm1 = CMariaDB.getConnection().prepareStatement("TRUNCATE TABLE sipro.dtm_avance_fisfinan_dti");
+					 pstm1 = CMariaDB.getConnection_analytic().prepareStatement("TRUNCATE TABLE sipro_analytic.dtm_avance_fisfinan_dti");
 					pstm1.executeUpdate();
 					
-					pstm1 = CMariaDB.getConnection().prepareStatement("Insert INTO sipro.dtm_avance_fisfinan_dti "
+					pstm1 = CMariaDB.getConnection_analytic().prepareStatement("Insert INTO sipro_analytic.dtm_avance_fisfinan_dti "
 							+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ");
 					
 					pstm = conn.prepareStatement("select * from DTM_AVANCE_FISFINAN_DTI");
