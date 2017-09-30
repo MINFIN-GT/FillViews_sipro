@@ -1,6 +1,7 @@
 package fill_view;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -171,7 +172,50 @@ public static boolean loadEntidad(Connection conn,Integer ejercicio){
 				pstm1 = CMariaDB.getConnection().prepareStatement(query);
 				pstm1.executeUpdate();
 				
+				query = "INSERT INTO cooperante (codigo, nombre, descripcion, usuario_creo, fecha_creacion, estado)" + 
+						"VALUES ('0', 'SIN COOPERANTE', 'SIN COOPERANTE', 'admin', NOW(), '1')";
+				
+				pstm1 = CMariaDB.getConnection().prepareStatement(query);
+				pstm1.executeUpdate();
+				
 				pstm1.close();
+				
+				
+				
+				CLogger.writeConsole("cooperante");
+				pstm1 = CMariaDB.getConnection().prepareStatement("Insert INTO cooperante (codigo,siglas,nombre,usuario_creo,fecha_creacion,estado) "
+						+ "values (?,?,?,?,?,?) ");
+				
+				pstm = conn.prepareStatement("select organismo,sigla,nombre,ejercicio from cg_organismos " +
+											" where ejercicio =  " + ejercicio +
+											" and restrictiva = 'N' " ); 
+
+				pstm.setFetchSize(1000);
+				rs = pstm.executeQuery();
+				while(rs!=null && rs.next()){
+					
+					pstm1.setInt(1, rs.getInt("organismo"));
+					pstm1.setString(2, rs.getString("sigla"));
+					pstm1.setString(3, rs.getString("nombre"));
+					pstm1.setString(4, "admin");
+					pstm1.setDate(5, new Date(new java.util.Date().getTime()));
+					pstm1.setInt(6, 1);
+					pstm1.addBatch();
+					rows++;
+					
+					if((rows % 1000) == 0){
+						pstm1.executeBatch();
+						CLogger.writeConsole("Records escritos: "+rows);
+					}
+				}
+				pstm1.executeBatch();
+				pstm1.close();
+				
+				rs.close();
+				pstm.close();
+				
+				rows_total += rows;
+				rows=0;
 				
 				
 				CLogger.writeConsole("Records escritos Totales: "+rows_total);
