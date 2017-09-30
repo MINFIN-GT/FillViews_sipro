@@ -28,7 +28,7 @@ public class CEjecucionPresupuestaria {
 					ret = true;
 					int rows = 0;
 					int rows_total=0;
-					CLogger.writeConsole("Cargando ejecucion_presupuestaria");
+					CLogger.writeConsole("Cargando mv_ejecucion_presupuestaria");
 					pstm1 = CMariaDB.getConnection_analytic().prepareStatement("Insert INTO sipro_analytic.mv_ejecucion_presupuestaria "
 							+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ");
 					 
@@ -240,7 +240,7 @@ public class CEjecucionPresupuestaria {
 							"(   select ejercicio, mes, fuente,organismo,correlativo,",
 								"programa, subprograma,proyecto,actividad,obra,",
 								"sum(ejecucion_presupuestaria) as ejecucion_presupuestaria",
-								"from sipro_analytic.ejecucion_presupuestaria",
+								"from sipro_analytic.mv_ejecucion_presupuestaria",
 							    "group by ejercicio, mes, fuente,organismo,correlativo, programa, subprograma,proyecto,actividad,obra",
 							") t1",
 							"group by t1.ejercicio,t1.fuente,t1.organismo,t1.correlativo,",
