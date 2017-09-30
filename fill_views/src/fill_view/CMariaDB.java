@@ -13,12 +13,14 @@ import utilities.CProperties;
 
 public class CMariaDB {
 	private static Connection connection;
+	private static Connection connection_analytic;
 	private static String host;
 	private static Integer port; 
 	private static String user;
 	private static String password;
 	private static String schema;
 	private static String schemades;
+	private static String schema_analytic;
 	
 	private static Statement st;
 	
@@ -29,6 +31,7 @@ public class CMariaDB {
 		password = CProperties.getMariadb_password();
 		schema = CProperties.getMariadb_schema();
 		schemades = CProperties.getMysql_schemades();
+		schema_analytic = CProperties.getMariadb_schema_analytic();
 	}
 	
 	public static boolean connect(){
@@ -116,6 +119,33 @@ public class CMariaDB {
 			CLogger.writeFullConsole("Error 6: CMariaDB.class", e);
 		}
 		return ret;
+	}
+	
+	public static boolean connect_analytic(){
+		try{
+			Class.forName("org.mariadb.jdbc.Driver").newInstance();
+			connection_analytic=DriverManager.getConnection("jdbc:mysql://"+host+":"+port+"/"+schema_analytic+"?" +
+                    "user="+user+"&password="+password);
+			if(!connection_analytic.isClosed())
+				return true;
+		}
+		catch(Exception e){
+			CLogger.writeFullConsole("Error 7 : CMariaDB.class ", e);
+		}
+		return false;
+	}
+	
+	public static Connection getConnection_analytic(){
+		return connection_analytic;
+	}
+	
+
+	public static void close_analytic(){
+		try {
+			connection_analytic.close();
+		} catch (SQLException e) {
+			CLogger.writeFullConsole("Error 8 : CMariaDB.class ", e);
+		}
 	}
 
 }

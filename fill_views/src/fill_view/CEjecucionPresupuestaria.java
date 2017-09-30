@@ -13,23 +13,23 @@ public class CEjecucionPresupuestaria {
 		
 		boolean ret = false;
 		try{
-			if( !conn.isClosed() && CMariaDB.connect()){
+			if( !conn.isClosed() && CMariaDB.connect_analytic()){
 				ret = true;
 				PreparedStatement pstm;
 				PreparedStatement pstm1;
 				ResultSet rs;
 
-				pstm1 = CMariaDB.getConnection().prepareStatement("TRUNCATE TABLE sipro.ejecucion_presupuestaria");
+				pstm1 = CMariaDB.getConnection_analytic().prepareStatement("TRUNCATE TABLE sipro_analytic.mv_ejecucion_presupuestaria");
 				pstm1.executeUpdate();
 				
-				boolean bconn =  CMariaDB.connect();
+				boolean bconn =  CMariaDB.connect_analytic();
 				CLogger.writeConsole("Cargando datos a mariaDB");
 				if(bconn){
 					ret = true;
 					int rows = 0;
 					int rows_total=0;
 					CLogger.writeConsole("Cargando ejecucion_presupuestaria");
-					pstm1 = CMariaDB.getConnection().prepareStatement("Insert INTO sipro.ejecucion_presupuestaria "
+					pstm1 = CMariaDB.getConnection_analytic().prepareStatement("Insert INTO sipro_analytic.mv_ejecucion_presupuestaria "
 							+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ");
 					 
 					
@@ -102,13 +102,12 @@ public class CEjecucionPresupuestaria {
 					rows = 0;
 					
 					
-					CLogger.writeConsole("mv_ep_prestamo");
-					String query = "drop tables if exists sipro.mv_ep_prestamo;";
-					pstm1 = CMariaDB.getConnection().prepareStatement(query);
+					String query = "drop tables if exists sipro_analytic.mv_ep_prestamo;";
+					pstm1 = CMariaDB.getConnection_analytic().prepareStatement(query);
 					pstm1.executeUpdate();
 					
 					query = String.join(" ","",
-						"create table sipro.mv_ep_prestamo" ,
+						"create table sipro_analytic.mv_ep_prestamo" ,
 							"select t1.ejercicio,t1.fuente,t1.organismo,t1.correlativo,",
 						"sum(case",
 						  "when t1.mes = 1 then t1.ejecucion",
@@ -161,7 +160,7 @@ public class CEjecucionPresupuestaria {
 						"from",
 						"(",
 						  "select ejercicio, mes, fuente,organismo,correlativo, sum(ejecucion_presupuestaria ) as ejecucion",
-						  "from sipro.ejecucion_presupuestaria",
+						  "from sipro_analytic.mv_ejecucion_presupuestaria",
 						  "group by ejercicio, mes, fuente,organismo,correlativo",
 						") t1",
 						"group by ejercicio,fuente,organismo,correlativo;");
@@ -169,7 +168,7 @@ public class CEjecucionPresupuestaria {
 					
 					
 					
-					pstm1 = CMariaDB.getConnection().prepareStatement(query);
+					pstm1 = CMariaDB.getConnection_analytic().prepareStatement(query);
 					pstm1.executeUpdate();
 
 					pstm1.close();
@@ -180,16 +179,13 @@ public class CEjecucionPresupuestaria {
 					rows=0;
 					
 					
+					query = "drop tables if exists sipro_analytic.mv_ep_estructura;";
 					
-					
-					CLogger.writeConsole("mv_ep_estructura");
-					query = "drop tables if exists sipro.mv_ep_estructura;";
-					
-					pstm1 = CMariaDB.getConnection().prepareStatement(query);
+					pstm1 = CMariaDB.getConnection_analytic().prepareStatement(query);
 					pstm1.executeUpdate();
 					
 					query = String.join(" ", "",
-							"create table sipro.mv_ep_estructura" ,
+							"create table sipro_analytic.mv_ep_estructura" ,
 							"select t1.ejercicio,t1.fuente,t1.organismo,t1.correlativo,",
 							"t1.programa, t1.subprograma,t1.proyecto,t1.actividad,t1.obra,",
 							"sum(case",
@@ -244,13 +240,13 @@ public class CEjecucionPresupuestaria {
 							"(   select ejercicio, mes, fuente,organismo,correlativo,",
 								"programa, subprograma,proyecto,actividad,obra,",
 								"sum(ejecucion_presupuestaria) as ejecucion_presupuestaria",
-								"from sipro.ejecucion_presupuestaria",
+								"from sipro_analytic.ejecucion_presupuestaria",
 							    "group by ejercicio, mes, fuente,organismo,correlativo, programa, subprograma,proyecto,actividad,obra",
 							") t1",
 							"group by t1.ejercicio,t1.fuente,t1.organismo,t1.correlativo,",
 							"t1.programa, t1.subprograma,t1.proyecto,t1.actividad,t1.obra;");
 					
-				pstm1 = CMariaDB.getConnection().prepareStatement(query);
+				pstm1 = CMariaDB.getConnection_analytic().prepareStatement(query);
 				rows = pstm1.executeUpdate();
 
 				pstm1.close();
@@ -272,7 +268,7 @@ public class CEjecucionPresupuestaria {
 			CLogger.writeFullConsole("Error 1: CEjecucionPresupuestaria.class", e);
 		}
 		finally{
-			CMariaDB.close();
+			CMariaDB.close_analytic();
 		}
 		return ret;
 	}

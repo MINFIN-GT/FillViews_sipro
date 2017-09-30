@@ -25,6 +25,7 @@ public class CProperties {
 	private static String mariadb_password=null;
 	private static String mariadb_schema="";
 	private static String mysql_schemades="";
+	private static String mariadb_schema_analytic="";
 	
 	private static String oracle_host="";
 	private static String oracle_port="";
@@ -60,6 +61,7 @@ public class CProperties {
 				mariadb_user=properties.getProperty("mariadb_user");
 				mariadb_password=properties.getProperty("mariadb_password");
 				mariadb_schema=properties.getProperty("mariadb_schema");
+				mariadb_schema_analytic=properties.getProperty("mariadb_schema_analytic");
 				
 				setHive_database(properties.getProperty("hive_database"));
 				setHive_databasedes(properties.getProperty("hive_databasedes"));
@@ -250,6 +252,14 @@ public class CProperties {
 
 	public static void setOracle_database(String oracle_database) {
 		CProperties.oracle_database = oracle_database;
+	}
+
+	public static String getMariadb_schema_analytic() {
+		return mariadb_schema_analytic;
+	}
+
+	public static void setMariadb_schema_analytic(String mariadb_schema_analytic) {
+		CProperties.mariadb_schema_analytic = mariadb_schema_analytic;
 	}
 	
 }
