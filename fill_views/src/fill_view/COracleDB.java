@@ -21,7 +21,7 @@ public class COracleDB {
 	        		, CProperties.getOracle_user(), CProperties.getOracle_password());
 	        return !connection.isClosed();
 		} catch (Exception e) {
-			CLogger.writeFullConsole("Error 1: CHive.class", e);
+			CLogger.writeFullConsole("Error 1: COracleDB.class", e);
 	    }
 	    return false;
 	}
@@ -38,7 +38,7 @@ public class COracleDB {
 			connection.close();
 		}
 		catch(Exception e) { 
-			CLogger.writeFullConsole("Error 4: CHive.class", e);
+			CLogger.writeFullConsole("Error 4: COracleDB.class", e);
 		}
 	}
 	
@@ -46,7 +46,7 @@ public class COracleDB {
 		try {
 			conn.close();
 		} catch (Exception e) {
-			CLogger.writeFullConsole("Error 5: CHive.class", e);
+			CLogger.writeFullConsole("Error 5: COracleDB.class", e);
 		}
 	}
 	
@@ -59,7 +59,7 @@ public class COracleDB {
 			}
 		}
 		catch(Exception e){
-			CLogger.writeFullConsole("Error 6: CHive.class", e);
+			CLogger.writeFullConsole("Error 6: COracleDB.class", e);
 		}
 		return ret;
 	}
@@ -76,7 +76,7 @@ public class COracleDB {
 			}
 		}
 		catch(Exception e){
-			CLogger.writeFullConsole("Error 7: CHive.class", e);
+			CLogger.writeFullConsole("Error 7: COracleDB.class", e);
 		}
 		return ret;
 	}
