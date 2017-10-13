@@ -30,11 +30,11 @@ public class CEjecucionPresupuestaria {
 					int rows_total=0;
 					CLogger.writeConsole("Cargando mv_ejecucion_presupuestaria");
 					pstm1 = CMariaDB.getConnection_analytic().prepareStatement("Insert INTO sipro_analytic.mv_ejecucion_presupuestaria "
-							+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ");
+							+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ");
 					 
 					
 					pstm = conn.prepareStatement("select gh.ejercicio ejercicio,month(gh.fec_aprobado) mes, gd.entidad, gd.unidad_ejecutora, gd.programa, gd.subprograma, gd.proyecto, gd.actividad, gd.obra, gd.renglon, r.nombre renglon_nombre, gd.fuente, " +       
-									"gd.renglon - (gd.renglon%100) grupo, gg.nombre grupo_nombre, gd.renglon - (gd.renglon%10) subgrupo, sg.nombre subgrupo_nombre,  " +
+									"gd.renglon - (gd.renglon%100) grupo, gg.nombre grupo_nombre, gd.renglon - (gd.renglon%10) subgrupo, sg.nombre subgrupo_nombre, gd.geografico, " +
 									"sum(gd.monto_renglon) ejecucion_presupuestaria, gd.organismo, gd.correlativo         " +
 									"from sicoinprod.eg_gastos_hoja gh, sicoinprod.eg_gastos_detalle gd, " +        
 									"sicoinprod.cp_grupos_gasto gg, sicoinprod.cp_objetos_gasto sg, sicoinprod.cp_objetos_gasto r " +     
@@ -55,7 +55,8 @@ public class CEjecucionPresupuestaria {
 									//"and gd.correlativo = 104 " +
 									(ejercicio!=null ? ("and gd.ejercicio = " + ejercicio) : "") +
 									"group by gh.ejercicio, month(gh.fec_aprobado), gd.entidad, gd.unidad_ejecutora, gd.programa, gd.subprograma, " +         
-									"gd.proyecto, gd.actividad, gd.obra, gg.nombre, sg.nombre, r.nombre, gd.renglon, gd.fuente, gd.geografico, gd.organismo, gd.correlativo " ); 
+									"gd.proyecto, gd.actividad, gd.obra, gg.nombre, sg.nombre, r.nombre, gd.renglon, gd.fuente, gd.geografico, gd.organismo, gd.correlativo "
+									+ " limit 1000" ); 
 						//pstm.setInt(1, i);
 						//pstm.setInt(2, i);
 						pstm.setFetchSize(1000);
@@ -82,6 +83,7 @@ public class CEjecucionPresupuestaria {
 							pstm1.setDouble(17, rs.getDouble("ejecucion_presupuestaria"));
 							pstm1.setInt(18, rs.getInt("organismo"));
 							pstm1.setInt(19, rs.getInt("correlativo"));
+							pstm1.setInt(20, rs.getInt("geografico"));
 							
 							pstm1.addBatch();
 							rows++;
@@ -187,7 +189,7 @@ public class CEjecucionPresupuestaria {
 					query = String.join(" ", "",
 							"create table sipro_analytic.mv_ep_estructura" ,
 							"select t1.ejercicio,t1.fuente,t1.organismo,t1.correlativo,",
-							"t1.programa, t1.subprograma,t1.proyecto,t1.actividad,t1.obra,",
+							"t1.programa, t1.subprograma,t1.proyecto,t1.actividad,t1.obra, t1.renglon,t1.geografico, ",
 							"sum(case",
 							  "when t1.mes = 1 then t1.ejecucion_presupuestaria",
 							  "else null",
@@ -238,13 +240,13 @@ public class CEjecucionPresupuestaria {
 							"end )diciembre",
 							"from",
 							"(   select ejercicio, mes, fuente,organismo,correlativo,",
-								"programa, subprograma,proyecto,actividad,obra,",
+								"programa, subprograma,proyecto,actividad,obra, renglon,geografico, ",
 								"sum(ejecucion_presupuestaria) as ejecucion_presupuestaria",
 								"from sipro_analytic.mv_ejecucion_presupuestaria",
-							    "group by ejercicio, mes, fuente,organismo,correlativo, programa, subprograma,proyecto,actividad,obra",
+							    "group by ejercicio, mes, fuente,organismo,correlativo, programa, subprograma,proyecto,actividad,obra,renglon,geografico",
 							") t1",
 							"group by t1.ejercicio,t1.fuente,t1.organismo,t1.correlativo,",
-							"t1.programa, t1.subprograma,t1.proyecto,t1.actividad,t1.obra;");
+							"t1.programa, t1.subprograma,t1.proyecto,t1.actividad,t1.obra,t1.renglon,t1.geografico;");
 					
 				pstm1 = CMariaDB.getConnection_analytic().prepareStatement(query);
 				rows = pstm1.executeUpdate();

@@ -24,6 +24,7 @@ public class CSigade {
 					PreparedStatement pstm1 = CMariaDB.getConnection_analytic().prepareStatement("TRUNCATE TABLE sipro_analytic.dtm_avance_fisfinan_det_dti");
 					pstm1.executeUpdate();
 					int rows_total=0;
+					
 					CLogger.writeConsole("Cargando datos a dtm_avance_fisfinan_det_dti");
 					
 					pstm1 = CMariaDB.getConnection_analytic().prepareStatement("Insert INTO sipro_analytic.dtm_avance_fisfinan_det_dti "
@@ -65,7 +66,7 @@ public class CSigade {
 					CLogger.writeConsole("Cargando datos a dtm_avance_fisfinan_dti");
 					
 					
-					 pstm1 = CMariaDB.getConnection_analytic().prepareStatement("TRUNCATE TABLE sipro_analytic.dtm_avance_fisfinan_dti");
+					pstm1 = CMariaDB.getConnection_analytic().prepareStatement("TRUNCATE TABLE sipro_analytic.dtm_avance_fisfinan_dti");
 					pstm1.executeUpdate();
 					
 					pstm1 = CMariaDB.getConnection_analytic().prepareStatement("Insert INTO sipro_analytic.dtm_avance_fisfinan_dti "
@@ -100,6 +101,40 @@ public class CSigade {
 						pstm1.setString(21, rs.getString("estado_prestamo"));
 						
 						
+						pstm1.addBatch();
+						rows++;
+						
+						if((rows % 1000) == 0){
+							pstm1.executeBatch();
+							CLogger.writeConsole("Records escritos: "+rows);
+						}
+					}
+					CLogger.writeConsole("Records escritos: "+rows);
+					pstm1.executeBatch();
+					rows_total += rows;
+					rows=0;
+					
+					
+					
+					CLogger.writeConsole("Cargando datos a dtm_avance_fisfinan_cmp");
+					
+					pstm1 = CMariaDB.getConnection_analytic().prepareStatement("TRUNCATE TABLE sipro_analytic.dtm_avance_fisfinan_cmp");
+					pstm1.executeUpdate();
+					
+					pstm1 = CMariaDB.getConnection_analytic().prepareStatement("Insert INTO sipro_analytic.dtm_avance_fisfinan_cmp "
+							+ "values (?,?,?,?,?) ");
+					
+					pstm = conn.prepareStatement("select * from DTM_AVANCE_FISFINAN_CMP");
+					
+					pstm.setFetchSize(1000);
+					rs = pstm.executeQuery();
+					while(rs!=null && rs.next()){
+						
+						pstm1.setString(1, rs.getString("codigo_presupuestario"));
+						pstm1.setInt(2, rs.getInt("numero_componente"));
+						pstm1.setString(3, rs.getString("nombre_componente"));
+						pstm1.setString(4, rs.getString("moneda_componente"));
+						pstm1.setBigDecimal(5, rs.getBigDecimal("monto_componente"));
 						pstm1.addBatch();
 						rows++;
 						

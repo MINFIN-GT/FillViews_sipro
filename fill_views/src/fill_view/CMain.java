@@ -27,7 +27,7 @@ public class CMain {
 	 public static void main(String[] args) throws Exception {
 		 DateTime start = new DateTime();
 		 CommandLine cline = parser.parse( options, args );
-		 if (CHive.connect()){
+		 if ((cline.hasOption("ej_pre") || cline.hasOption("entidades_ues")) && CHive.connect()){
 			 Connection conn = CHive.getConnection();
 			 if(cline.hasOption("ej_pre")){
 				 CLogger.writeConsole("Inicio carga ejecución presupuestaria...");
@@ -43,7 +43,8 @@ public class CMain {
 			 CHive.close(conn);
 		 }
 		 if(cline.hasOption("sigade")){
-			 if(COracleDB.connect()){		 Connection conn = COracleDB.getConnection();
+			 if(COracleDB.connect()){		
+				 Connection conn = COracleDB.getConnection();
 				 CLogger.writeConsole("Inicio carga sigade...");
 				 if(CSigade.loadDataSigade(conn))
 					 CLogger.writeConsole("Cara de sigade con exito");
