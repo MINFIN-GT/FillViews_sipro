@@ -56,7 +56,7 @@ public class CEjecucionPresupuestaria {
 									(ejercicio!=null ? ("and gd.ejercicio = " + ejercicio) : "") +
 									"group by gh.ejercicio, month(gh.fec_aprobado), gd.entidad, gd.unidad_ejecutora, gd.programa, gd.subprograma, " +         
 									"gd.proyecto, gd.actividad, gd.obra, gg.nombre, sg.nombre, r.nombre, gd.renglon, gd.fuente, gd.geografico, gd.organismo, gd.correlativo "
-									+ " limit 1000" ); 
+									 ); 
 						//pstm.setInt(1, i);
 						//pstm.setInt(2, i);
 						pstm.setFetchSize(1000);
