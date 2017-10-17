@@ -149,7 +149,6 @@ public class CSigade {
 					rows=0;
 					
 					
-					// -------------
 					
 					CLogger.writeConsole("Cargando datos a dtm_avance_fisfinan_enp");
 					
@@ -182,10 +181,7 @@ public class CSigade {
 					rows_total += rows;
 					rows=0;
 					
-					
-					//-------------------------------
-					
-					
+										
 					pstm1.close();
 					rs.close();
 					pstm.close();
