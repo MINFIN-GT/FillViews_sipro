@@ -149,6 +149,43 @@ public class CSigade {
 					rows=0;
 					
 					
+					// -------------
+					
+					CLogger.writeConsole("Cargando datos a dtm_avance_fisfinan_enp");
+					
+					pstm1 = CMariaDB.getConnection_analytic().prepareStatement("TRUNCATE TABLE sipro_analytic.dtm_avance_fisfinan_enp");
+					pstm1.executeUpdate();
+					
+					pstm1 = CMariaDB.getConnection_analytic().prepareStatement("Insert INTO sipro_analytic.dtm_avance_fisfinan_enp "
+							+ "values (?,?,?,?) ");
+					
+					pstm = conn.prepareStatement("select * from DTM_AVANCE_FISFINAN_ENP");
+					
+					pstm.setFetchSize(1000);
+					rs = pstm.executeQuery();
+					while(rs!=null && rs.next()){
+						
+						pstm1.setString(1, rs.getString("codigo_presupuestario"));
+						pstm1.setInt(2, rs.getInt("ejercicio_fiscal"));
+						pstm1.setInt(3, rs.getInt("entidad_presupuestaria"));
+						pstm1.setInt(4, rs.getInt("unidad_ejecutora"));
+						pstm1.addBatch();
+						rows++;
+						
+						if((rows % 1000) == 0){
+							pstm1.executeBatch();
+							CLogger.writeConsole("Records escritos: "+rows);
+						}
+					}
+					CLogger.writeConsole("Records escritos: "+rows);
+					pstm1.executeBatch();
+					rows_total += rows;
+					rows=0;
+					
+					
+					//-------------------------------
+					
+					
 					pstm1.close();
 					rs.close();
 					pstm.close();
