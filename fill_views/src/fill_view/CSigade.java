@@ -70,7 +70,7 @@ public class CSigade {
 					pstm1.executeUpdate();
 					
 					pstm1 = CMariaDB.getConnection_analytic().prepareStatement("Insert INTO sipro_analytic.dtm_avance_fisfinan_dti "
-							+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ");
+							+ "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ");
 					
 					pstm = conn.prepareStatement("select * from DTM_AVANCE_FISFINAN_DTI");
 					
@@ -99,6 +99,7 @@ public class CSigade {
 						pstm1.setBigDecimal(19, rs.getBigDecimal("por_desembolsar_usd"));
 						pstm1.setBigDecimal(20, rs.getBigDecimal("por_desembolsar_gtq"));
 						pstm1.setString(21, rs.getString("estado_prestamo"));
+						pstm1.setString(22, rs.getString("objetivo"));
 						
 						
 						pstm1.addBatch();
