@@ -84,9 +84,6 @@ public static boolean loadEntidad(Connection conn,Integer ejercicio){
 				rows_total += rows;
 				rows=0;
 				
-				
-				
-				
 				CLogger.writeConsole("unidad_ejecutora");
 				
 				
@@ -122,12 +119,7 @@ public static boolean loadEntidad(Connection conn,Integer ejercicio){
 				rows_total += rows;
 				rows=0;
 				
-				
-				
-				
-				
 				CLogger.writeConsole("unidad_ejecutora 0");
-				
 				
 				pstm1 = CMariaDB.getConnection().prepareStatement("Insert INTO unidad_ejecutora(unidad_ejecutora,nombre,entidadentidad,ejercicio) "
 						+ "values (?,?,?,?) ");
@@ -161,10 +153,6 @@ public static boolean loadEntidad(Connection conn,Integer ejercicio){
 				rows_total += rows;
 				rows=0;
 				
-				
-				
-				
-				
 				query = "insert into entidad (entidad,nombre,abreviatura,ejercicio) "+
 						"values (0,'SIN ENTIDAD','Sin Entidad',"+ ejercicio + ")";
 				
@@ -189,10 +177,6 @@ public static boolean loadEntidad(Connection conn,Integer ejercicio){
 				pstm1.close();
 				
 				CLogger.writeConsole("cooperante");
-				
-				
-				
-				
 				
 				
 				
@@ -233,11 +217,9 @@ public static boolean loadEntidad(Connection conn,Integer ejercicio){
 				rows_total += rows;
 				rows=0;
 				
-				
 				CLogger.writeConsole("Records escritos Totales: "+rows_total);
 					
 				}
-				
 			}					
 				
 		}

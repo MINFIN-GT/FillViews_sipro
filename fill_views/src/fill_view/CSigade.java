@@ -21,9 +21,11 @@ public class CSigade {
 				if(bconn){
 					ret = true;
 					int rows = 0;
+					int rows_total=0;
+					ResultSet rs;
 					PreparedStatement pstm1 = CMariaDB.getConnection_analytic().prepareStatement("TRUNCATE TABLE sipro_analytic.dtm_avance_fisfinan_det_dti");
 					pstm1.executeUpdate();
-					int rows_total=0;
+					
 					
 					CLogger.writeConsole("Cargando datos a dtm_avance_fisfinan_det_dti");
 					
@@ -33,7 +35,7 @@ public class CSigade {
 					pstm = conn.prepareStatement("select * from DTM_AVANCE_FISFINAN_DET_DTI");
 					
 					pstm.setFetchSize(1000);
-					ResultSet rs = pstm.executeQuery();
+					rs = pstm.executeQuery();
 					while(rs!=null && rs.next()){
 						
 						pstm1.setBigDecimal(1, rs.getBigDecimal("ejercicio_fiscal"));
@@ -149,8 +151,6 @@ public class CSigade {
 					rows_total += rows;
 					rows=0;
 					
-					
-					
 					CLogger.writeConsole("Cargando datos a dtm_avance_fisfinan_enp");
 					
 					pstm1 = CMariaDB.getConnection_analytic().prepareStatement("TRUNCATE TABLE sipro_analytic.dtm_avance_fisfinan_enp");
@@ -182,7 +182,25 @@ public class CSigade {
 					rows_total += rows;
 					rows=0;
 					
-										
+					
+					// 	actualizar componentes
+					CLogger.writeConsole("Actualizando componentes ");
+					pstm1 = CMariaDB.getConnection_analytic().prepareStatement("SELECT * FROM sipro_analytic.dtm_avance_fisfinan_cmp");
+					rs = pstm1.executeQuery();
+					PreparedStatement pstm2 = CMariaDB.getConnection_analytic().prepareStatement("");
+					while(rs!=null && rs.next()){
+						String query = "update sipro.componente_sigade " +  
+								"set monto_componente =  " + rs.getInt("monto_componente") + 
+								" where codigo_presupuestario = '"+ rs.getString("codigo_presupuestario") + "' " +
+								" and numero_componente = " + rs.getInt("numero_componente") + 
+								" and estado = 1";
+						pstm2 = CMariaDB.getConnection_analytic().prepareStatement(query);
+						rows = rows + pstm2.executeUpdate();
+					}
+					if (pstm2!= null && pstm2.isClosed())
+					pstm2.close();
+					CLogger.writeConsole("Records editados: "+rows);
+					
 					pstm1.close();
 					rs.close();
 					pstm.close();

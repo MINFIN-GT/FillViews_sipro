@@ -20,6 +20,7 @@ public class CMain {
 		options.addOption("ep", "ej_pre", false, "Ejecucion presupuestara");
 		options.addOption("sg", "sigade", false, "Conexión a Sigade");
 		options.addOption("eue", "entidades_ues", true, "Catalogo de entidades y ues");
+		options.addOption("gc", "adquisiciones", false, "Adquisiciones en guatecompras");
 	}
 	
 	final static  CommandLineParser parser = new DefaultParser();
@@ -27,12 +28,13 @@ public class CMain {
 	 public static void main(String[] args) throws Exception {
 		 DateTime start = new DateTime();
 		 CommandLine cline = parser.parse( options, args );
-		 if ((cline.hasOption("ej_pre") || cline.hasOption("entidades_ues")) && CHive.connect()){
+		 if ((cline.hasOption("ej_pre") || cline.hasOption("entidades_ues") || cline.hasOption("adquisiciones")) 
+				 && CHive.connect()){
 			 Connection conn = CHive.getConnection();
 			 if(cline.hasOption("ej_pre")){
 				 CLogger.writeConsole("Inicio carga ejecución presupuestaria...");
 				 if(CEjecucionPresupuestaria.loadEjecucionPresupuestaria(conn, null))
-					 CLogger.writeConsole("Cara ejecucion presupuestara con exito");
+					 CLogger.writeConsole("Cagra ejecucion presupuestara con exito");
 			 }
 			 if(cline.hasOption("entidades_ues")){
 				 CLogger.writeConsole("Inicio carga de catalogo de entidades y unidades_ejecutoras...");
@@ -40,6 +42,12 @@ public class CMain {
 						 Integer.parseInt(cline.getOptionValue("eue")) : start.getYear();
 				 CEntidad.loadEntidad(conn, ejercicio);
 			 }
+			 if(cline.hasOption("adquisiciones")){
+				 CLogger.writeConsole("Inicio carga de carga de adquisiciones de guatecopras...");
+				 if(CGuatecompras.loadAdquisiciones(conn))
+					 CLogger.writeConsole("Cagra de adquisiciones cargadas con exito ");
+			 }
+			 
 			 CHive.close(conn);
 		 }
 		 if(cline.hasOption("sigade")){
