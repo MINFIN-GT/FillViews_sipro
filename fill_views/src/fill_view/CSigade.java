@@ -23,6 +23,8 @@ public class CSigade {
 					int rows = 0;
 					int rows_total=0;
 					ResultSet rs;
+					
+					
 					PreparedStatement pstm1 = CMariaDB.getConnection_analytic().prepareStatement("TRUNCATE TABLE sipro_analytic.dtm_avance_fisfinan_det_dti");
 					pstm1.executeUpdate();
 					
@@ -182,15 +184,17 @@ public class CSigade {
 					rows_total += rows;
 					rows=0;
 					
+
 					
-					// 	actualizar componentes
+					
+				
 					CLogger.writeConsole("Actualizando componentes ");
 					pstm1 = CMariaDB.getConnection_analytic().prepareStatement("SELECT * FROM sipro_analytic.dtm_avance_fisfinan_cmp");
 					rs = pstm1.executeQuery();
 					PreparedStatement pstm2 = CMariaDB.getConnection_analytic().prepareStatement("");
 					while(rs!=null && rs.next()){
 						String query = "update sipro.componente_sigade " +  
-								"set monto_componente =  " + rs.getInt("monto_componente") + 
+								"set monto_componente =  " + rs.getDouble("monto_componente") + 
 								" where codigo_presupuestario = '"+ rs.getString("codigo_presupuestario") + "' " +
 								" and numero_componente = " + rs.getInt("numero_componente") + 
 								" and estado = 1";
@@ -199,12 +203,53 @@ public class CSigade {
 					}
 					if (pstm2!= null && pstm2.isClosed())
 					pstm2.close();
-					CLogger.writeConsole("Records editados: "+rows);
+					
+					rows_total += rows;
+					rows=0;
+					
+					CLogger.writeConsole("\tRecords editados: "+rows);
+				
+					
+					
+					CLogger.writeConsole("Eliminando componentes que ya no existen  ");
+					pstm1 = CMariaDB.getConnection_analytic().prepareStatement("select c.* " +
+								"from sipro.componente c  " +
+								"where c.componente_sigadeid in ( " +
+								"select cp.id  " +
+								"from sipro.componente_sigade cp " +
+								"left outer join sipro_analytic.dtm_avance_fisfinan_cmp cmp " +
+								"on (cmp.codigo_presupuestario = cp.codigo_presupuestario " +
+									"and cmp.numero_componente = cp.numero_componente) " +
+								"Where cmp.codigo_presupuestario is null " +
+								"and cmp.numero_componente is null ) and estado = 1 "
+							);
+					
+					rs = pstm1.executeQuery();
+					pstm2 = CMariaDB.getConnection_analytic().prepareStatement("");
+					while(rs!=null && rs.next()){
+						String query = "update sipro.componente " +  
+								"set estado =  0 " +  
+								" where componente_sigadeid = "+ rs.getString("componente_sigadeid")  ;
+						pstm2 = CMariaDB.getConnection_analytic().prepareStatement(query);
+						rows = rows + pstm2.executeUpdate();
+						
+						query = "update sipro.componente_sigade " +  
+								"set estado =  0 " +  
+								" where id = "+ rs.getString("id")  ;
+						pstm2 = CMariaDB.getConnection_analytic().prepareStatement(query);
+						rows = rows + pstm2.executeUpdate();
+					}
+					
+					if (pstm2!= null && pstm2.isClosed())
+					pstm2.close();
+					
+					rows_total += rows;
+					rows=0;
 					
 					pstm1.close();
 					rs.close();
-					pstm.close();
-				CLogger.writeConsole("Records escritos Totales: "+rows_total);	
+					//pstm.close();
+				CLogger.writeConsole("Records escritos Totales: "+rows_total);
 				}
 				
 			}
