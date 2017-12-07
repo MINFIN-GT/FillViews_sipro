@@ -36,7 +36,7 @@ public class CGuatecompras {
 					 
 					
 					pstm = conn.prepareStatement("select  c.nog_concurso, a.numero_contrato, a.monto, " +
-													"c.fecha_doc_respaldo, c.fecha_publicacion, c.fecha_limite_ofertar, "+
+													"c.fecha_doc_respaldo, c.fecha_publicacion, c.fecha_cro, "+
 													"a.fecha_adjudicacion, a.fecha_hora_contrato " +
 													"from guatecompras.gc_concurso c  " +
 													"left outer join guatecompras.gc_adjudicacion a ON  ( c.nog_concurso = a.nog_concurso ) "  ); 
@@ -49,7 +49,7 @@ public class CGuatecompras {
 							pstm1.setDouble(3, rs.getDouble("monto"));
 							pstm1.setDate(4, rs.getTimestamp("fecha_doc_respaldo") != null &&  rs.getTimestamp("fecha_doc_respaldo").getTime() > 0 ? new Date(rs.getTimestamp("fecha_doc_respaldo").getTime()): null);
 							pstm1.setDate(5, rs.getTimestamp("fecha_publicacion") != null &&  rs.getTimestamp("fecha_publicacion").getTime() > 0  ? new Date(rs.getTimestamp("fecha_publicacion").getTime()): null);
-							pstm1.setDate(6, rs.getTimestamp("fecha_limite_ofertar") != null &&  rs.getTimestamp("fecha_limite_ofertar").getTime() > 0 &&  rs.getTimestamp("fecha_limite_ofertar").getTime() < 2510451068L  ?  new Date(rs.getTimestamp("fecha_limite_ofertar").getTime()): null);
+							pstm1.setDate(6, rs.getTimestamp("fecha_cro") != null &&  rs.getTimestamp("fecha_cro").getTime() > 0 &&  rs.getTimestamp("fecha_cro").getTime() < 2510451068L  ?  new Date(rs.getTimestamp("fecha_cro").getTime()): null);
 							pstm1.setDate(7, rs.getTimestamp("fecha_adjudicacion") != null &&  rs.getTimestamp("fecha_adjudicacion").getTime() > 0  ?  new Date(rs.getTimestamp("fecha_adjudicacion").getTime()) : null);
 							pstm1.setDate(8, rs.getTimestamp("fecha_hora_contrato") != null &&  rs.getTimestamp("fecha_hora_contrato").getTime() > 0  ? new Date(rs.getTimestamp("fecha_hora_contrato").getTime()): null);
 

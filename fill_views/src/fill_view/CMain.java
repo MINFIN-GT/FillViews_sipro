@@ -43,7 +43,7 @@ public class CMain {
 				 CEntidad.loadEntidad(conn, ejercicio);
 			 }
 			 if(cline.hasOption("adquisiciones")){
-				 CLogger.writeConsole("Inicio carga de carga de adquisiciones de guatecopras...");
+				 CLogger.writeConsole("Inicio carga de carga de adquisiciones de guatecompras...");
 				 if(CGuatecompras.loadAdquisiciones(conn))
 					 CLogger.writeConsole("Cagra de adquisiciones cargadas con exito ");
 			 }
