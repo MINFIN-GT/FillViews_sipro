@@ -94,7 +94,7 @@ public class CEjecucionPresupuestaria {
 							pstm1.addBatch();
 							rows++;
 							
-							if((rows % 1000) == 0){
+							if((rows % 100000) == 0){
 								pstm1.executeBatch();
 								CLogger.writeConsole("Records escritos: "+rows);
 							}
@@ -419,7 +419,7 @@ public class CEjecucionPresupuestaria {
 						pstm1.addBatch();
 						rows++;
 						
-						if((rows % 1000) == 0){
+						if((rows % 100000) == 0){
 							pstm1.executeBatch();
 							CLogger.writeConsole("  Records escritos: "+rows);
 						}
